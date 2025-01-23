@@ -48,8 +48,6 @@ def main() -> None:
         )
 
         # 徐々に表示
-        output = []
-        i = 1
         stream = response.get("body")
         if stream:
             for event in stream:
@@ -58,9 +56,8 @@ def main() -> None:
                     chunk_obj = json.loads(chunk.get("bytes").decode())
                     if chunk_obj["type"] == "content_block_delta":
                         text = chunk_obj["delta"].get("text", "")
-                        output.append(text)
-                        print(f"\t\t\x1b[31m**Chunk {i}**\x1b[0m\n{text}\n")
-                        i += 1
+                        print(text, end="", flush=True)
+            print()
     except botocore.exceptions.ClientError as e:
         # 必要に応じてエラーハンドリング
         raise e
